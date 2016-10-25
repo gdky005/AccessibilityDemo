@@ -1,5 +1,7 @@
 package gdky005.accesibilitydemo;
 
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,9 +28,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Toast.makeText(this, "请优先开启权限", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "请优先开启 " + getString(R.string.accessibilityTab) + " 的权限", Toast.LENGTH_SHORT).show();
 
 //        startService(new Intent(this, WQAccessibilityService.class));
+
+
+
+
+        ComponentName componentName = new ComponentName("com.android.settings", "com.android.settings.Settings$AccessibilitySettingsActivity");
+
+        Intent intent = new Intent();
+        intent.setComponent(componentName);
+        startActivity(intent);
 
     }
 

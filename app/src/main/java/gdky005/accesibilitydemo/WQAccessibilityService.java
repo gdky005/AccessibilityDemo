@@ -3,9 +3,13 @@ package gdky005.accesibilitydemo;
 import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -16,6 +20,26 @@ import java.util.List;
 public class WQAccessibilityService extends AccessibilityService {
 
     private static final String TAG = "WQAccessibilityService";
+    private static final String TEXTVIEW = TextView.class.getCanonicalName();
+    private static final String BUTTON = Button.class.getCanonicalName();
+
+    Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            if (msg.what == 0) {
+                Log.i(TAG, "onAccessibilityEvent:  找到搜索按钮了，而且我要点击下");
+
+                AccessibilityNodeInfo node = (AccessibilityNodeInfo) msg.obj;
+                node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
+
+        }
+    };
+
+
 
     /**
      * 系统会在成功连接上你的服务的时候调用这个方法，在这个方法里你可以做一下初始化工作，例如设备的声音震动管理，也可以调用setServiceInfo()进行配置工作。
@@ -63,19 +87,8 @@ public class WQAccessibilityService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        Log.i(TAG, "onAccessibilityEvent: " + event.getPackageName());
-
-        if (event.getSource() != null) {
-
-            findAndPerformAction("安装");
-
-            findAndPerformAction("下一步");
-
-            findAndPerformAction("完成");
-
-        }
-
-
+//        Log.i(TAG, "onAccessibilityEvent: " + event.getPackageName());
+        nodeInfo(event);
 
 
 
@@ -103,6 +116,50 @@ public class WQAccessibilityService extends AccessibilityService {
 //
 //        }
 
+    }
+
+    private void nodeInfo(AccessibilityEvent event) {
+        AccessibilityNodeInfo nodeInfo = event.getSource();
+        if (nodeInfo != null) {
+            if (getRootInActiveWindow() == null)
+                return;
+            checkName(TEXTVIEW, "搜索");
+
+
+//            //通过文字找到当前的节点
+//            List<AccessibilityNodeInfo> nodes = getRootInActiveWindow().findAccessibilityNodeInfosByText("搜索");
+//            for (int i = 0; i < nodes.size(); i++) {
+//                AccessibilityNodeInfo node = nodes.get(i);
+//                // 执行按钮点击行为
+//                if (node.getClassName().equals("android.widget.TextView") && node.isEnabled()) {
+//                    Log.i(TAG, "onAccessibilityEvent:  找到搜索按钮了，而且我要点击下");
+//
+//                    node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+//                }
+//            }
+        }
+    }
+
+    private void checkName(String type, String keyWorld) {
+        //通过文字找到当前的节点
+        List<AccessibilityNodeInfo> nodes = getRootInActiveWindow().findAccessibilityNodeInfosByText(keyWorld);
+        for (int i = 0; i < nodes.size(); i++) {
+            AccessibilityNodeInfo node = nodes.get(i);
+            if (node.getClassName().equals(type) && node.isEnabled()) {
+
+                handler.removeMessages(0);
+
+                Message msg = handler.obtainMessage();
+                msg.what = 0;
+                msg.obj = node;
+
+                handler.sendMessageDelayed(msg, 3000);
+
+//                node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+
+//
+            }
+        }
     }
 
     /**

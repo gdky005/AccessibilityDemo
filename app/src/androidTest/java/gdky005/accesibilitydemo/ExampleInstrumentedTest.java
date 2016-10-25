@@ -3,6 +3,7 @@ package gdky005.accesibilitydemo;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.TextView;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,4 +24,27 @@ public class ExampleInstrumentedTest {
 
         assertEquals("gdky005.accesibilitydemo", appContext.getPackageName());
     }
+
+    @Test
+    public void test1() {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        TextView tv  = new TextView(appContext);
+        System.out.println(TextView.class.getCanonicalName());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
