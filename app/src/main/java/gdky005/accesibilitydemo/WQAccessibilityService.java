@@ -13,6 +13,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class WQAccessibilityService extends AccessibilityService {
     private static final String TEXTVIEW = TextView.class.getCanonicalName();
     private static final String BUTTON = Button.class.getCanonicalName();
     private static final String EDITTEXT = EditText.class.getCanonicalName();
+    private static final String LISTVIEW = ListView.class.getCanonicalName();
 
     Handler handler = new Handler() {
 
@@ -39,14 +41,19 @@ public class WQAccessibilityService extends AccessibilityService {
             if (msg.what == 0) {
                 Log.i(TAG, "onAccessibilityEvent:  找到搜索按钮了，而且我要点击下");
 
-                AccessibilityNodeInfo node = (AccessibilityNodeInfo) msg.obj;
+//                AccessibilityNodeInfo node = (AccessibilityNodeInfo) msg.obj;
 //                node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
 //                node.performAction()
 
 
-                Bundle arguments = new Bundle();
-                arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, "989786786");
-                node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+//                AccessibilityNodeInfo node = (AccessibilityNodeInfo) msg.obj;
+//                Bundle arguments = new Bundle();
+//                arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, "989786786");
+//                node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+
+
+                AccessibilityNodeInfo node = (AccessibilityNodeInfo) msg.obj;
+                node.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);
             }
 
         }
@@ -73,7 +80,10 @@ public class WQAccessibilityService extends AccessibilityService {
 //            checkName(TEXTVIEW, "搜索");
 
 
-            checkName(EDITTEXT, "com.tencent.mm:id/fo");
+//            checkName(EDITTEXT, "com.tencent.mm:id/fo");
+
+
+            checkName(LISTVIEW, "com.tencent.mm:id/bfr");
 
 
 //            //通过文字找到当前的节点
